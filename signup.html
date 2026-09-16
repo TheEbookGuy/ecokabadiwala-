@@ -1,1 +1,271 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign up • Urban Mining Connect</title><link rel="stylesheet" href="style.css"></head><body><main class="auth-page"><div class="auth-card"><a class="brand auth-brand" href="index.html"><span class="brandmark">♻</span><span>Urban Mining Connect</span></a><div class="eyebrow">CREATE ACCOUNT</div><h1 class="title">Join the recovery network.</h1><p class="subtitle">Create a Collector account to capture materials, or a Buyer account to manage incoming lots.</p><div class="role-grid"><button id="collectorRole" class="role-card selected" onclick="chooseRole('collector')">🚚<b>Collector</b><small>Capture, value and hand over lots</small></button><button id="buyerRole" class="role-card" onclick="chooseRole('buyer')">♻️<b>Buyer / Recycler</b><small>Review incoming lots and manage recovery</small></button></div><form id="form"><div class="field"><label>Full name / organization</label><input id="name" required placeholder="Your name or business name"></div><div class="grid g2"><div class="field"><label>Email</label><input id="email" type="email" required placeholder="you@example.com"></div><div class="field"><label>Phone</label><input id="phone" inputmode="tel" placeholder="Optional"></div></div><div class="field"><label>Password</label><input id="password" type="password" minlength="6" required placeholder="At least 6 characters"></div><button class="btn btn-primary" style="width:100%;margin-top:8px">Create account</button><div id="msg" class="notice" style="display:none;margin-top:15px"></div></form><p class="small muted" style="text-align:center;margin-top:18px">Already registered? <a href="login.html">Log in</a></p></div></main><script src="app.js"></script><script>let role='collector';function chooseRole(r){role=r;collectorRole.classList.toggle('selected',r==='collector');buyerRole.classList.toggle('selected',r==='buyer')}document.getElementById('form').addEventListener('submit',async e=>{e.preventDefault();const msgEl=document.getElementById('msg');msgEl.style.display='none';try{await api('/auth/signup',{method:'POST',body:JSON.stringify({name:document.getElementById('name').value,email:document.getElementById('email').value,phone:document.getElementById('phone').value,password:document.getElementById('password').value,role})});location.href=role==='buyer'?'console.html':'index.html'}catch(err){let text='Could not create account';try{text=JSON.parse(err.message).error||text}catch(e){}msgEl.textContent=text;msgEl.style.display='block'}})</script></body></html>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign up • Urban Mining Connect</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<main class="auth-page">
+
+<div class="auth-card">
+
+<a class="brand auth-brand" href="index.html">
+<span class="brandmark">♻</span>
+<span>Urban Mining Connect</span>
+</a>
+
+<div class="eyebrow">CREATE ACCOUNT</div>
+
+<h1 class="title">Join the recovery network.</h1>
+
+<p class="subtitle">
+Create a Collector account to capture materials, or a Buyer account to manage incoming lots.
+</p>
+
+<div class="role-grid">
+
+<button id="collectorRole"
+class="role-card selected"
+onclick="chooseRole('collector')">
+🚚
+<b>Collector</b>
+<small>Capture, value and hand over lots</small>
+</button>
+
+<button id="buyerRole"
+class="role-card"
+onclick="chooseRole('buyer')">
+♻️
+<b>Buyer / Recycler</b>
+<small>Review incoming lots and manage recovery</small>
+</button>
+
+</div>
+
+<form id="form">
+
+<div class="field">
+<label>Full name / organization</label>
+<input id="name" required placeholder="Your name or business name">
+</div>
+
+<div class="grid g2">
+
+<div class="field">
+<label>Email</label>
+<input id="email" type="email" required placeholder="you@example.com">
+</div>
+
+<div class="field">
+<label>Phone</label>
+<input id="phone" inputmode="tel" placeholder="Optional">
+</div>
+
+</div>
+
+<div class="field">
+<label>Password</label>
+<input id="password"
+type="password"
+minlength="6"
+required
+placeholder="At least 6 characters">
+</div>
+
+<button class="btn btn-primary"
+style="width:100%;margin-top:8px">
+Create account
+</button>
+
+<div id="msg"
+class="notice"
+style="display:none;margin-top:15px">
+</div>
+
+</form>
+
+<p class="small muted" style="text-align:center;margin-top:18px">
+Already registered?
+<a href="login.html">Log in</a>
+</p>
+
+</div>
+</main>
+
+
+<!-- Firebase Signup Code -->
+
+<script type="module">
+
+import { auth, db } from "./firebase-config.js";
+
+import {
+    createUserWithEmailAndPassword,
+    updateProfile
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+import {
+    doc,
+    setDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+let role = "collector";
+
+
+// Select role
+window.chooseRole = function(r) {
+
+    role = r;
+
+    document
+        .getElementById("collectorRole")
+        .classList.toggle("selected", r === "collector");
+
+    document
+        .getElementById("buyerRole")
+        .classList.toggle("selected", r === "buyer");
+
+};
+
+
+// Signup
+document
+.getElementById("form")
+.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const msgEl = document.getElementById("msg");
+
+    msgEl.style.display = "none";
+
+
+    const name =
+        document.getElementById("name").value.trim();
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const phone =
+        document.getElementById("phone").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+
+    try {
+
+        msgEl.textContent = "Creating account...";
+        msgEl.style.display = "block";
+
+
+        // Create Firebase account
+        const userCredential =
+            await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+
+        const user = userCredential.user;
+
+
+        // Save name in Firebase Authentication
+        await updateProfile(user, {
+            displayName: name
+        });
+
+
+        // Save user information in Firestore
+        await setDoc(
+            doc(db, "users", user.uid),
+            {
+                name: name,
+                email: email,
+                phone: phone,
+                role: role,
+                userId: user.uid,
+                createdAt: serverTimestamp()
+            }
+        );
+
+
+        msgEl.textContent =
+            "Account created successfully!";
+
+        msgEl.style.display = "block";
+
+
+        // Redirect
+        setTimeout(() => {
+
+            if (role === "buyer") {
+                location.href = "console.html";
+            } else {
+                location.href = "index.html";
+            }
+
+        }, 1000);
+
+
+    } catch (error) {
+
+        console.error("Firebase signup error:", error);
+
+
+        let message = "Could not create account.";
+
+
+        if (error.code === "auth/email-already-in-use") {
+
+            message =
+                "This email is already registered. Please log in.";
+
+        }
+
+        else if (error.code === "auth/invalid-email") {
+
+            message =
+                "Please enter a valid email address.";
+
+        }
+
+        else if (error.code === "auth/weak-password") {
+
+            message =
+                "Password must contain at least 6 characters.";
+
+        }
+
+        else if (error.code === "auth/operation-not-allowed") {
+
+            message =
+                "Email/Password login is not enabled in Firebase.";
+
+        }
+
+        else {
+
+            message = error.message;
+
+        }
+
+
+        msgEl.textContent = message;
+        msgEl.style.display = "block";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
