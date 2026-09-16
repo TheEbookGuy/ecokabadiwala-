@@ -1,0 +1,227 @@
+{
+  "materials": [
+    {
+      "id": "iron",
+      "group": "Ferrous",
+      "name": "Iron",
+      "icon": "🔩",
+      "rate": 38,
+      "unit": "kg",
+      "trend": "up",
+      "delta": "+₹2",
+      "source_type": "seed"
+    },
+    {
+      "id": "steel",
+      "group": "Ferrous",
+      "name": "Steel",
+      "icon": "🏗️",
+      "rate": 42,
+      "unit": "kg",
+      "trend": "flat",
+      "delta": "steady",
+      "source_type": "seed"
+    },
+    {
+      "id": "aluminium",
+      "group": "Non-Ferrous",
+      "name": "Aluminium",
+      "icon": "🥫",
+      "rate": 155,
+      "unit": "kg",
+      "trend": "up",
+      "delta": "+₹5",
+      "source_type": "seed"
+    },
+    {
+      "id": "copper",
+      "group": "Non-Ferrous",
+      "name": "Copper",
+      "icon": "🟠",
+      "rate": 690,
+      "unit": "kg",
+      "trend": "up",
+      "delta": "+₹12",
+      "source_type": "seed"
+    },
+    {
+      "id": "brass",
+      "group": "Non-Ferrous",
+      "name": "Brass",
+      "icon": "🟡",
+      "rate": 510,
+      "unit": "kg",
+      "trend": "flat",
+      "delta": "steady",
+      "source_type": "seed"
+    },
+    {
+      "id": "lithium",
+      "group": "Critical Minerals",
+      "name": "Lithium-bearing battery",
+      "icon": "🔋",
+      "rate": 125,
+      "unit": "kg",
+      "trend": "up",
+      "delta": "+₹4",
+      "source_type": "seed"
+    },
+    {
+      "id": "magnet",
+      "group": "Critical Minerals",
+      "name": "Magnet / rare-earth bearing",
+      "icon": "🧲",
+      "rate": 180,
+      "unit": "kg",
+      "trend": "flat",
+      "delta": "indicative",
+      "source_type": "seed"
+    },
+    {
+      "id": "pcb",
+      "group": "E-Waste",
+      "name": "PCB",
+      "icon": "🟩",
+      "rate": 310,
+      "unit": "kg",
+      "trend": "up",
+      "delta": "+₹8",
+      "source_type": "seed"
+    },
+    {
+      "id": "cable",
+      "group": "E-Waste",
+      "name": "Copper cable & wire",
+      "icon": "🔌",
+      "rate": 265,
+      "unit": "kg",
+      "trend": "up",
+      "delta": "+₹6",
+      "source_type": "seed"
+    },
+    {
+      "id": "panel",
+      "group": "E-Waste",
+      "name": "LCD / LED panel",
+      "icon": "🖥️",
+      "rate": 72,
+      "unit": "kg",
+      "trend": "flat",
+      "delta": "steady",
+      "source_type": "seed"
+    },
+    {
+      "id": "battery",
+      "group": "E-Waste",
+      "name": "Battery",
+      "icon": "🔋",
+      "rate": 92,
+      "unit": "kg",
+      "trend": "down",
+      "delta": "−₹3",
+      "source_type": "seed"
+    },
+    {
+      "id": "mixedmetal",
+      "group": "Mixed Scrap",
+      "name": "Mixed metal",
+      "icon": "🧰",
+      "rate": 55,
+      "unit": "kg",
+      "trend": "flat",
+      "delta": "steady",
+      "source_type": "seed"
+    }
+  ],
+  "facilities": [
+    {
+      "id": "FAC-GREENLOOP",
+      "name": "GreenLoop Materials",
+      "type": "Authorized Recycler",
+      "dist": "8 km",
+      "rate": 320,
+      "auth": "Authorization verified",
+      "score": 96,
+      "pickup": true,
+      "materials": "E-waste • PCB • Cable",
+      "authorization_status": "active"
+    },
+    {
+      "id": "FAC-SHAKTI",
+      "name": "Shakti Metal Recovery",
+      "type": "Authorized Processor",
+      "dist": "12 km",
+      "rate": 48,
+      "auth": "Authorization verified",
+      "score": 92,
+      "pickup": true,
+      "materials": "Iron • Steel • Aluminium",
+      "authorization_status": "active"
+    },
+    {
+      "id": "FAC-URBANMET",
+      "name": "UrbanMet Secondarys",
+      "type": "Aggregator",
+      "dist": "5 km",
+      "rate": 44,
+      "auth": "Registration verified",
+      "score": 88,
+      "pickup": false,
+      "materials": "Ferrous • Mixed metal",
+      "authorization_status": "active"
+    },
+    {
+      "id": "FAC-CIRCULAR",
+      "name": "Circular Minerals Hub",
+      "type": "Authorized Processor",
+      "dist": "21 km",
+      "rate": 710,
+      "auth": "Authorization verified",
+      "score": 94,
+      "pickup": true,
+      "materials": "Copper • Critical mineral streams",
+      "authorization_status": "active"
+    }
+  ],
+  "users": [
+    {
+      "id": "USR-05DC9944",
+      "name": "Pritam Kumar Pattanaik",
+      "email": "pritampattanayak1477@gmail.com",
+      "phone": "",
+      "role": "collector",
+      "password_salt": "a6327284983a61050b4271d8eeecfa0c",
+      "password_hash": "416acffbc9fba3ec408641534225294133af6ff755ff0f1a72008212ea1f768319d8f55c88e61a492cb1aced37f05abed6ea0d059c52d4012fc7d58ea571ce7b",
+      "created": "2026-09-16T03:50:31.128Z",
+      "collector_id": "COL-0BF95045"
+    }
+  ],
+  "lots": [
+    {
+      "id": "UM-MU3KCU4A",
+      "user_id": "USR-05DC9944",
+      "collector_id": "COL-0BF95045",
+      "category": "steel",
+      "group": "Ferrous",
+      "name": "Steel",
+      "weight": 53,
+      "rate": 42,
+      "status": "created",
+      "created": "2026-09-16T03:51:09.946Z",
+      "photo_ref": "/server/data/uploads/UM-MU3KCU4A.png",
+      "quoted_price": null,
+      "facility_id": null,
+      "payment_status": "pending",
+      "transaction_status": "open",
+      "events": [
+        {
+          "type": "captured",
+          "at": "2026-09-16T03:51:09.975Z",
+          "by": "USR-05DC9944"
+        }
+      ]
+    }
+  ],
+  "handovers": [],
+  "events": []
+}
