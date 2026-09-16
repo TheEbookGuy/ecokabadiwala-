@@ -29,11 +29,9 @@
 Create a Collector account to capture materials, or a Buyer account to manage incoming lots.
 </p>
 
-
 <div class="role-grid">
 
-<button
-type="button"
+<button type="button"
 id="collectorRole"
 class="role-card selected"
 onclick="chooseRole('collector')">
@@ -44,9 +42,7 @@ onclick="chooseRole('collector')">
 
 </button>
 
-
-<button
-type="button"
+<button type="button"
 id="buyerRole"
 class="role-card"
 onclick="chooseRole('buyer')">
@@ -59,66 +55,42 @@ onclick="chooseRole('buyer')">
 
 </div>
 
-
 <form id="form">
 
-
 <div class="field">
-
 <label>Full name / organization</label>
-
-<input
-id="name"
+<input id="name"
 required
 placeholder="Your name or business name">
-
 </div>
-
 
 <div class="grid g2">
 
-
 <div class="field">
-
 <label>Email</label>
-
-<input
-id="email"
+<input id="email"
 type="email"
 required
 placeholder="you@example.com">
-
 </div>
 
-
 <div class="field">
-
 <label>Phone</label>
-
-<input
-id="phone"
+<input id="phone"
 inputmode="tel"
 placeholder="Optional">
-
 </div>
 
-
 </div>
-
 
 <div class="field">
-
 <label>Password</label>
-
-<input
-id="password"
+<input id="password"
 type="password"
 minlength="6"
 required
 placeholder="At least 6 characters">
-
 </div>
-
 
 <button
 type="submit"
@@ -129,39 +101,28 @@ Create account
 
 </button>
 
-
-<div
-id="msg"
+<div id="msg"
 class="notice"
 style="display:none;margin-top:15px">
 </div>
 
-
 </form>
 
-
-<p
-class="small muted"
+<p class="small muted"
 style="text-align:center;margin-top:18px">
 
 Already registered?
-
 <a href="login.html">Log in</a>
 
 </p>
-
 
 </div>
 
 </main>
 
 
-<!-- Keep your existing app.js -->
-
 <script src="app.js"></script>
 
-
-<!-- Firebase Signup -->
 
 <script type="module">
 
@@ -182,124 +143,54 @@ import {
 let role = "collector";
 
 
-/* ---------------------------
-   SELECT ACCOUNT TYPE
----------------------------- */
+window.chooseRole = function(r) {
 
-window.chooseRole = function(selectedRole) {
-
-    role = selectedRole;
+    role = r;
 
     document
-        .getElementById("collectorRole")
-        .classList.toggle(
-            "selected",
-            role === "collector"
-        );
+    .getElementById("collectorRole")
+    .classList.toggle("selected", r === "collector");
 
     document
-        .getElementById("buyerRole")
-        .classList.toggle(
-            "selected",
-            role === "buyer"
-        );
+    .getElementById("buyerRole")
+    .classList.toggle("selected", r === "buyer");
 
 };
 
 
-/* ---------------------------
-   CREATE ACCOUNT
----------------------------- */
-
 document
 .getElementById("form")
-.addEventListener("submit", async function(e) {
+.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
+    const msg = document.getElementById("msg");
 
-    const msgEl =
-        document.getElementById("msg");
+    msg.style.display = "block";
 
-
-    msgEl.style.display = "none";
+    msg.textContent = "Creating Firebase account...";
 
 
     const name =
-        document
-        .getElementById("name")
-        .value
-        .trim();
-
+        document.getElementById("name").value.trim();
 
     const email =
-        document
-        .getElementById("email")
-        .value
-        .trim();
-
+        document.getElementById("email").value.trim();
 
     const phone =
-        document
-        .getElementById("phone")
-        .value
-        .trim();
-
+        document.getElementById("phone").value.trim();
 
     const password =
-        document
-        .getElementById("password")
-        .value;
-
-
-    /* Basic validation */
-
-    if (!name) {
-
-        msgEl.textContent =
-            "Please enter your name.";
-
-        msgEl.style.display = "block";
-
-        return;
-    }
-
-
-    if (!email) {
-
-        msgEl.textContent =
-            "Please enter your email.";
-
-        msgEl.style.display = "block";
-
-        return;
-    }
-
-
-    if (password.length < 6) {
-
-        msgEl.textContent =
-            "Password must contain at least 6 characters.";
-
-        msgEl.style.display = "block";
-
-        return;
-    }
+        document.getElementById("password").value;
 
 
     try {
 
-        msgEl.textContent =
-            "Creating your account...";
+        /* ==========================
+           STEP 1: CREATE AUTH ACCOUNT
+        ========================== */
 
-        msgEl.style.display = "block";
-
-
-        /* ---------------------------
-           FIREBASE AUTHENTICATION
-        ---------------------------- */
-
-        const userCredential =
+        const credential =
             await createUserWithEmailAndPassword(
                 auth,
                 email,
@@ -307,19 +198,22 @@ document
             );
 
 
-        const user =
-            userCredential.user;
+        const user = credential.user;
 
 
         console.log(
-            "Firebase account created:",
+            "AUTHENTICATION SUCCESS:",
             user.uid
         );
 
 
-        /* ---------------------------
-           SAVE NAME TO AUTH PROFILE
-        ---------------------------- */
+        msg.textContent =
+            "Authentication successful. Saving user information...";
+
+
+        /* ==========================
+           STEP 2: UPDATE NAME
+        ========================== */
 
         await updateProfile(user, {
 
@@ -328,9 +222,12 @@ document
         });
 
 
-        /* ---------------------------
-           SAVE USER TO FIRESTORE
-        ---------------------------- */
+        console.log("NAME SAVED TO AUTH PROFILE");
+
+
+        /* ==========================
+           STEP 3: SAVE TO FIRESTORE
+        ========================== */
 
         await setDoc(
             doc(db, "users", user.uid),
@@ -353,21 +250,20 @@ document
 
 
         console.log(
-            "User information saved to Firestore."
+            "FIRESTORE SUCCESS:",
+            user.uid
         );
 
 
-        msgEl.textContent =
-            "Account created successfully!";
-
-        msgEl.style.display = "block";
+        msg.textContent =
+            "Account created and information saved successfully!";
 
 
-        /* ---------------------------
-           REDIRECT
-        ---------------------------- */
+        /* ==========================
+           STEP 4: REDIRECT
+        ========================== */
 
-        setTimeout(function() {
+        setTimeout(() => {
 
             if (role === "buyer") {
 
@@ -381,113 +277,25 @@ document
 
             }
 
-        }, 1000);
+        }, 1200);
 
 
-    }
-
-
-    /* ---------------------------
-       SHOW EXACT FIREBASE ERROR
-    ---------------------------- */
-
-    catch (error) {
+    } catch (error) {
 
         console.error(
-            "FULL FIREBASE ERROR:",
+            "FIREBASE ERROR:",
             error
         );
 
 
-        let message =
-            "Could not create account.";
+        msg.style.display = "block";
 
 
-        if (
-            error.code ===
-            "auth/email-already-in-use"
-        ) {
-
-            message =
-                "This email is already registered. Please log in.";
-
-        }
-
-
-        else if (
-            error.code ===
-            "auth/invalid-email"
-        ) {
-
-            message =
-                "Please enter a valid email address.";
-
-        }
-
-
-        else if (
-            error.code ===
-            "auth/weak-password"
-        ) {
-
-            message =
-                "Password must contain at least 6 characters.";
-
-        }
-
-
-        else if (
-            error.code ===
-            "auth/operation-not-allowed"
-        ) {
-
-            message =
-                "Email/Password authentication is disabled in Firebase.";
-
-        }
-
-
-        else if (
-            error.code ===
-            "auth/network-request-failed"
-        ) {
-
-            message =
-                "Network error. Please check your internet connection.";
-
-        }
-
-
-        else if (
-            error.code ===
-            "permission-denied"
-        ) {
-
-            message =
-                "Firestore permission denied. Check your Firestore rules.";
-
-        }
-
-
-        else {
-
-            /*
-              Show the actual Firebase error.
-              This will help us diagnose
-              any remaining problem.
-            */
-
-            message =
-                error.code +
-                " : " +
-                error.message;
-
-        }
-
-
-        msgEl.textContent = message;
-
-        msgEl.style.display = "block";
+        msg.textContent =
+            "ERROR: " +
+            error.code +
+            " — " +
+            error.message;
 
     }
 
